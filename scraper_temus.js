@@ -9,9 +9,13 @@ const { chromium } = require("playwright");
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
   // Espera que la página cargue y cierra pop-ups si existen
-  try {
-    await page.click('[aria-label="Close"]', { timeout: 3000 });
-  } catch (_) {}
+    try {
+    await page.waitForSelector("[aria-label='Close'], ._3c7A9Vnx.Ekwe4GOT", { timeout: 5000 });
+    await page.click("[aria-label='Close'], ._3c7A9Vnx.Ekwe4GOT");
+    console.log("✅ Pop-up cerrado");
+    } catch (_) {
+    console.log("⚠️ No apareció pop-up");
+    }
 
   // Buscar productos de una categoría o palabra clave
   const palabraClave = "audifonos"; // Puedes cambiarlo a lo que quieras
