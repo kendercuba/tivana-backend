@@ -25,6 +25,9 @@ app.get("/api/productos", (req, res) => {
 app.post("/api/productos", (req, res) => {
   const nuevo = req.body;
 
+    // 👉 Esto es lo que debes agregar:
+  console.log("📦 Producto recibido:", nuevo);
+
   if (!nuevo.titulo || !nuevo.precio || !nuevo.imagen || !nuevo.enlace) {
     return res.status(400).json({ error: "Datos incompletos" });
   }
