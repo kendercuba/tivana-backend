@@ -2,7 +2,7 @@ const fs = require("fs");
 const { chromium } = require("playwright");
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
   const url = "https://www.temu.com"; // Página principal
