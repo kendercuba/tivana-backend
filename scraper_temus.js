@@ -2,44 +2,37 @@ const fs = require("fs");
 const { chromium } = require("playwright");
 
 (async () => {
-  const browser = await chromium.launch({ headless: false });
-  const page = await browser.newPage();
+  const browser = await chromium.launchPersistentContext("./perfil-temu", {
+    headless: false, // Abre el navegador visible para login
+    viewport: { width: 1280, height: 800 },
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  });
 
-  const url = "https://www.temu.com/search_result.html?q=audifonos"; // Página principal
+  const page = await browser.newPage();
+  const url = "https://www.temu.com";
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
-  // Espera que la página cargue y cierra pop-ups si existen
-try {
-  await page.waitForSelector("[aria-label='Close'], ._3c7A9Vnx.Ekwe4GOT", { timeout: 5000 });
-  await page.click("[aria-label='Close'], ._3c7A9Vnx.Ekwe4GOT");
-  console.log("✅ Pop-up cerrado");
-} catch (_) {
-  console.log("⚠️ No apareció pop-up");
-}
+  console.log("🟡 Esperando que navegues e inicies sesión...");
+  await page.pause(); // 🟡 Te permite pausar y tú haces login
 
-// 👇 Pausa aquí para inspeccionar la página antes de seguir
-await new Promise(resolve => setTimeout(resolve, 30000)); // ⏸ Espera 30 segundos
+  // Luego puedes buscar productos por palabra clave:
+  const palabraClave = "audifonos";
+  await page.goto(`https://www.temu.com/search_result.html?_bg_fs=1&search_key=${encodeURIComponent(palabraClave)}`, { waitUntil: "domcontentloaded" });
 
+  // Esperar a que carguen los productos
+  await page.waitForSelector(".product-card", { timeout: 10000 });
 
-  // Buscar productos de una categoría o palabra clave
-  const palabraClave = "audifonos"; // Puedes cambiarlo a lo que quieras
- // await page.fill("#searchInput", palabraClave);
- // await page.press("input[type='search']", "Enter");
-
-  // Esperar a que cargue la lista de productos
-  await page.waitForSelector(".product-card", { timeout: 15000 });
-
-  const productos = await page.$$eval(".product-card", cards =>
-    cards.slice(0, 20).map(card => {
+  const productos = await page.$$eval(".product-card", (cards) =>
+    cards.slice(0, 20).map((card) => {
       const titulo = card.querySelector(".product-title")?.innerText || "Sin título";
-      const precio = card.querySelector(".product-price")?.innerText?.replace(/[^\d.]/g, "") || "0";
+      const precio = card.querySelector(".product-price")?.innerText.replace(/[^\d.]/g, "") || "0";
       const imagen = card.querySelector("img")?.src || "";
       const enlace = card.querySelector("a")?.href || "#";
       return { titulo, precio: parseFloat(precio), imagen, enlace };
     })
   );
 
-  // Guardar en un archivo
   fs.writeFileSync("./data/productos_temus.json", JSON.stringify(productos, null, 2));
   console.log("✅ Productos guardados en productos_temus.json");
 
