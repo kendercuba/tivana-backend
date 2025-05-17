@@ -24,8 +24,6 @@ app.get("/api/productos", (req, res) => {
 // Agregar un producto
 app.post("/api/productos", (req, res) => {
   const nuevo = req.body;
-
-    // 👉 Esto es lo que debes agregar:
   console.log("📦 Producto recibido:", nuevo);
 
   if (!nuevo.titulo || !nuevo.precio || !nuevo.imagen || !nuevo.enlace) {
