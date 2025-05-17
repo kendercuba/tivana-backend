@@ -15,7 +15,7 @@ const { chromium } = require("playwright");
 
   // Buscar productos de una categoría o palabra clave
   const palabraClave = "audifonos"; // Puedes cambiarlo a lo que quieras
-  await page.fill("input[type='search']", palabraClave);
+  await page.fill("#searchInput", palabraClave);
   await page.press("input[type='search']", "Enter");
 
   // Esperar a que cargue la lista de productos
