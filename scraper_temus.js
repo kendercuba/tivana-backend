@@ -5,7 +5,7 @@ const { chromium } = require("playwright");
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
-  const url = "https://www.temu.com"; // Página principal
+  const url = "https://www.temu.com/search_result.html?q=audifonos"; // Página principal
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
   // Espera que la página cargue y cierra pop-ups si existen
@@ -23,8 +23,8 @@ await new Promise(resolve => setTimeout(resolve, 30000)); // ⏸ Espera 30 segun
 
   // Buscar productos de una categoría o palabra clave
   const palabraClave = "audifonos"; // Puedes cambiarlo a lo que quieras
-  await page.fill("#searchInput", palabraClave);
-  await page.press("input[type='search']", "Enter");
+ // await page.fill("#searchInput", palabraClave);
+ // await page.press("input[type='search']", "Enter");
 
   // Esperar a que cargue la lista de productos
   await page.waitForSelector(".product-card", { timeout: 10000 });
