@@ -27,7 +27,7 @@ await new Promise(resolve => setTimeout(resolve, 30000)); // ⏸ Espera 30 segun
  // await page.press("input[type='search']", "Enter");
 
   // Esperar a que cargue la lista de productos
-  await page.waitForSelector(".product-card", { timeout: 10000 });
+  await page.waitForSelector(".product-card", { timeout: 15000 });
 
   const productos = await page.$$eval(".product-card", cards =>
     cards.slice(0, 20).map(card => {
